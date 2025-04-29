@@ -1,0 +1,14 @@
+{
+  "rating": "[data-id='rating']",
+  "total price order": "[data-id='total-price-order']",
+  "create order": "[data-id='create-order']",
+  "status order": "[data-id='status-order']",
+  "quantity": "[data-id='product-quantity']",
+  "order id": "[data-id='order-id']",
+  "name product": "[data-id='product-name']",
+  "price for one": "[data-id='price-for-one']",
+  "order item": "[data-id='order-item']",
+  "gold rating": "[data-id='gold-rating']",
+  "grey rating": "[data-id='grey-rating']",
+  "notification success": ".Toastify__toast--success"
+}

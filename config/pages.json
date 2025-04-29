@@ -1,0 +1,46 @@
+{
+   "home": {
+    "route": "/",
+    "regex": "^/$"
+   },
+   "buy products": {
+      "route": "/dashboard/user/all-products",
+      "regex": "^\/dashboard\/user\/all-products"
+   },
+   "user register": {
+      "route": "/register/user",
+      "regex": "^\/register\/user"
+   },
+   "user login": {
+      "route": "/login/user",
+      "regex": "^\/login/user"
+   },
+   "user forgot password": {
+      "route": "/forgot-password/user",
+      "regex": "^\/forgot-password/user"
+   },
+   "orders": {
+      "route": "/dashboard/user/orders",
+      "regex": "^\/dashboard/user/orders\/?$"
+   },
+   "orders details": {
+      "route": "/dashboard/user/orders",
+      "regex": "^\/dashboard/user/orders/\\d+"
+   },
+   "add funds": {
+      "route": "/dashboard/user/add-funds",
+      "regex": "^\/dashboard/user/add-funds\/?$"
+   },
+   "transaction": {
+      "route": "/dashboard/user/transaction",
+      "regex": "^\/dashboard/user/transaction\/?$"
+   },
+   "profile": {
+      "route": "/dashboard/user/profile",
+      "regex": "^\/dashboard/user/profile\/?$"
+   },
+   "stripe": {
+      "route": "/c/pay/",
+      "regex": "^/c/pay/\\w+"
+   }
+}

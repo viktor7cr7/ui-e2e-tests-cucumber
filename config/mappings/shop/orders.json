@@ -1,0 +1,11 @@
+{ "total price order": "[data-id='total-price-order']", 
+"create order": "[data-id='create-order']",
+"status order": "[data-id='status-order']",
+"search id": "[data-id='search-id']",
+"sort price": "[data-id='sort-price']",
+"sort date": "[data-id='sort-date']",
+"sort status": "[data-id='sort-status']",
+"order item": "[datd-id='order-item']",
+"order id": "[data-id='order-id']",
+"details order": "[data-id='details-order']"
+}

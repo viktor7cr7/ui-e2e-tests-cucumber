@@ -1,0 +1,6 @@
+{
+    "user login header": ".user-login-header",
+    "email": "email",
+    "password": "password",
+    "notification register success": ".Toastify__toast-body"
+}

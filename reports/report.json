@@ -1,0 +1,198 @@
+[
+  {
+    "description": "",
+    "elements": [
+      {
+        "description": "",
+        "id": "я-как-пользователь-хочу-оценить-товар;я-как-пользователь-хочу-поставить-оценку-3",
+        "keyword": "Scenario",
+        "line": 5,
+        "name": "Я как пользователь хочу поставить оценку 3",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 675943099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 6,
+            "name": "Авторизация через куки",
+            "match": {
+              "location": "dist\\step-definitions\\cookie.js:5"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 253780600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "Я нахожусь на странице \"buy products\"",
+            "match": {
+              "location": "dist\\step-definitions\\navigation.js:6"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2607586000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 8,
+            "name": "\"1ый\" элемент \"product container\" должен отображаться",
+            "match": {
+              "location": "dist\\step-definitions\\assertions\\verify-element-visibility.js:60"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 71391700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 9,
+            "name": "Я нажимаю на \"1ую\" кнопку \"buy product\"",
+            "match": {
+              "location": "dist\\step-definitions\\mouse.js:52"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 94059700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 10,
+            "name": "Я выбираю значение \"Balance\" из селекта \"select payment method\"",
+            "match": {
+              "location": "dist\\step-definitions\\form.js:62"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 38690299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 11,
+            "name": "Я нажимаю кнопку \"product modal buy\"",
+            "match": {
+              "location": "dist\\step-definitions\\mouse.js:7"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 137868499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 12,
+            "name": "Я перенаправляюсь на страницу \"orders\"",
+            "match": {
+              "location": "dist\\step-definitions\\navigation.js:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2002922300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 13,
+            "name": "Я нажимаю на \"последнюю\" ссылку \"details order\"",
+            "match": {
+              "location": "dist\\step-definitions\\mouse.js:52"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 207446699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 14,
+            "name": "Я перенаправляюсь на страницу \"orders details\"",
+            "match": {
+              "location": "dist\\step-definitions\\navigation.js:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1584100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 15,
+            "name": "Я нажимаю на \"3ю\" кнопку \"grey rating\"",
+            "match": {
+              "location": "dist\\step-definitions\\mouse.js:52"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 73442999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "Элемент \"notification success\" должен содержать текст \"Спасибо за отзыв!\"",
+            "match": {
+              "location": "dist\\step-definitions\\assertions\\verify-elemeny-value.js:9"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 115282600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "На странице должны быть только \"3\" элемента со значением селектора \"gold rating\"",
+            "result": {
+              "status": "undefined",
+              "duration": 0
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 536463999
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@dev",
+            "line": 4
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "я-как-пользователь-хочу-оценить-товар",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Я как пользователь хочу оценить товар",
+    "tags": [],
+    "uri": "src\\features\\shop-features\\set-rating.feature"
+  }
+]

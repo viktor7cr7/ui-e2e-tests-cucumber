@@ -1,0 +1,12 @@
+{
+    "name product": ".ProductSummary-name",
+    "description product": "[data-testid='product-summary-product-description']",
+    "product price usd": "[data-testid='product-summary-total-amount']",
+    "email": "#email",
+    "card number": "#cardNumber",
+    "card expiry": "#cardExpiry",
+    "card cvc": "#cardCvc",
+    "billing name": "#billingName",
+    "billing country": "#billingCountry",
+    "submit button": ".SubmitButton-IconContainer"
+}

@@ -1,0 +1,15 @@
+{
+    "profile title": ".form-title",
+    "email input": "#email",
+    "upload avatar": "#avatar",
+    "save changes": ".form-btn",
+    "grades title": "[data-id='grades-header']",
+    "grades indicator": "[data-id='grades-indicator']",
+    "discount count percentage" : ".discount-info",
+    "my grades": "[data-id='my-grades']",
+    "current amount": "[data-id='current-amount']",
+    "current level": "[data-id='current-level']",
+    "to next level": "[data-id='to-next-level']",
+    "current discount": "[data-id='discount-percentage']",
+    "notification success": ".Toastify__toast--success"
+}

@@ -1,0 +1,10 @@
+[
+    {
+      "originalErrMsgRegexString": "Время ожидания [0-9]+ms для [a-zA-Z0-9 ]+превышено",
+      "parsedErrMsg": "🧨 Истекло время ожидания '{}' <> 🧨"
+    },
+    {
+      "originalErrMsgRegexString" : "Невозможно прочитать свойство для 'undefined' (.*)",
+      "parsedErrMsg" : "🧨 Не удалось смаппить значение '{}' для <> 🧨"
+    }
+  ]

@@ -1,0 +1,11 @@
+{
+    "market header": "[data-id='market-header']",
+    "admin header": "[data-id='admin-header']",
+    "email shop input": "[data-id='email-shop-input']",
+    "email admin input": "[data-id='email-admin-input]",
+    "password shop input": "[data-id='password-shop-input']",
+    "passwords admin input": "[data-id='password-admin-input]",
+    "market signin": "[data-id='market-signin']",
+    "market register": "[data-id='market-register']",
+    "market forgot password": "[data-id='market-forgot-password']"
+}

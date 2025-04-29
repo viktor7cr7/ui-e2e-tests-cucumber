@@ -1,0 +1,11 @@
+{
+    "transaction table": "[data-id='transaction-table']",
+    "row id": "[data-id='Id']",
+    "row amount": "[data-id='Amount']",
+    "row status": "[data-id='Status']",
+    "row created": "[data-id='Created AtSort']",
+    "sort id": "[data-id='IdSort']",
+    "sort amount": "[data-id='AmountSort']",
+    "sort status": "[data-id='StatusSort']",
+    "sort createdAt": "[data-id='Created At']"
+}

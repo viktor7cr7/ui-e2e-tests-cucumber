@@ -1,0 +1,8 @@
+{
+    "user register header": ".user-register-header",
+    "admin register header": ".admin-register-header",
+    "name": "#name",
+    "email": "#email",
+    "password": "#password",
+    "button register": "[data-id='button-register']"
+}

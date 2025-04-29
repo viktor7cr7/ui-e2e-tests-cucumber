@@ -1,0 +1,11 @@
+{
+    "header": ".block-header",
+    "add funds content": ".add-funds",
+    "cart": "[data-id='card']",
+    "button back": ".btn-back",
+    "section payment": "[data-id='section-payment']",
+    "current method payment": ".content-method",
+    "amount input": "#amount",
+    "total amount": "[data-id='total-amount']",
+    "go to payment": ".action-add-funds"
+}

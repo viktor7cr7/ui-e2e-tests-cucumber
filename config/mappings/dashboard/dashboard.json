@@ -1,0 +1,23 @@
+{
+    "user balance": ".balance-btn",
+    "cart": "[data-id='cart']",
+    "avatar img": "[data-id='avatar-img']",
+    "state cart": "[data-id='state-cart']",
+    "item cart": "[data-id='cart-item']",
+    "modal cart": "[data-id='modal-cart']",
+    "close modal cart": "[data-id='close-modal-cart']",
+    "product name cart": "[data-id='product-name-cart']",
+    "price for one": "[data-id='price-for-one']",
+    "product quantity cart": "[data-id='quantity-cart']",
+    "update quantity": "[data-id='update-quantity']",
+    "input quantity": "[data-id='input-quantity']",
+    "quantity value": "[data-id='quantity-value']",
+    "save change quantity": "[data-id='save-change-quantity']",
+    "delete product": "[data-id='delete-product']",
+    "total price": "[data-id='total-price']",
+    "payment method cart": "[data-id='payment-method-cart']",
+    "buy product cart": "[data-id='buy-product-cart']",
+    "orders": "[data-id='orders']",
+    "buy products": "[data-id='buy-products']",
+    "profile": "[data-id='profile']"
+}
