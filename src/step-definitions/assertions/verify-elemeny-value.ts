@@ -39,7 +39,7 @@ When(
         return WaitForResult.ELEMENT_NOT_AVAILABLE;
       },
       globalConfig,
-      { failureMessage: `Элемент ${elementKey} ${negate ? "не " : ""}должен содержать текст ${expectedText}` }
+      { failureMessage: `Не пройдено условие: Элемент ${elementKey} ${negate ? "не " : ""}должен содержать текст ${expectedText}` }
     );
   }
 );
@@ -265,7 +265,7 @@ Then(
   }
 );
 
-/* Then(
+Then(
   /^Значение элемента "([^"]+)" (не )?должно быть равно тексту "(.+)"$/,
   async function (this: ScenarioWorld, elementKey: ElementKey, negate: boolean, expectedText: string) {
     const {
@@ -277,17 +277,31 @@ Then(
 
     const elementIdentifier = getElementLocator(page, elementKey, globalConfig);
 
-    await waitFor(async () => {
-      const elementStable = await waitForSelector(page, elementIdentifier, { state: "attached" });
+    await waitFor(
+      async () => {
+        const elementStable = await waitForSelector(page, elementIdentifier, { state: "attached" });
 
-      if (elementStable) {
-        const elementAttribute = await getElementValue(page, elementIdentifier);
-        return (elementAttribute === expectedText) === !negate;
-      }
-      return false;
-    });
+        if (elementStable) {
+          const elementAttribute = await getElementValue(page, elementIdentifier);
+          return (elementAttribute === expectedText) === !negate
+            ? { result: WaitForResult.PASS }
+            : {
+                result: WaitForResult.FAIL,
+                replace: `Не пройдено условие: Значение элемента ${elementKey} ${
+                  negate ? "не " : ""
+                }должно быть равно тексту ${expectedText}`,
+              };
+        }
+        return {
+          result: WaitForResult.ELEMENT_NOT_AVAILABLE,
+          replace: `Элемент ${elementIdentifier} не доступен, проверьте доступность элемента в DOM`,
+        };
+      },
+      globalConfig,
+      { target: elementKey }
+    );
   }
-); */
+);
 
 Then(
   /^Значение элемента "([^"]+)" (не )?должно содержать текст "(.*)"$/,

@@ -1,4 +1,4 @@
-Feature: Я как пользователь хочу отфильтровать продукты по наименованию, цене, категории, рейтингу и статусу
+Feature: Фильтрация товаров
 
     Scenario: Фильтрация по поиску
     Given Авторизация через куки
@@ -52,8 +52,9 @@ Feature: Я как пользователь хочу отфильтровать 
     Scenario: Сброс фильтрации
     Given Авторизация через куки
     Given Я нахожусь на странице "buy products"
+    Then Я заполняю поле "search product" значением "смарт"
+    And Я ожидаю "1" секунд
     Then Я выбираю значение "desc" из селекта "sort product price"
-    Then Я выбираю значение "asc" из селекта "sort product rating"
-    Then Я заполняю поле "search product" значением "смарт"   
+    Then Я выбираю значение "asc" из селекта "sort product rating"   
     And Я нажимаю кнопку "reset filters"
     Then Текст атрибута "action" в элементе "filters form" должен быть равен тексту "/dashboard/user/all-products?index"

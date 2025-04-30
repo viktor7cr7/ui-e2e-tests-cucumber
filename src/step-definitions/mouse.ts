@@ -7,7 +7,6 @@ import {
   clickElement,
   clickElementAtIndex,
   clickElementToLocator,
-  getElementAtIndex,
   getElementByText,
   getElements,
   hoverElementAtIndex,

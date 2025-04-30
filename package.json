@@ -7,7 +7,7 @@
     "precucumber": "rm -rf reports && mkdir reports && echo {} > reports/report.json",
     "transpile": "rm -rf dist && babel --extensions .ts --out-dir dist src",
     "cucumber-compile": "yarn transpile && cpy src/support/test-data/** dist/support/test-data && cucumber-js",
-    "cucumber": "cross-env COMMON_CONFIG_FILE=env/common.env yarn cucumber-compile"
+    "cucumber:localhost": "cross-env NODE_ENV=localhost COMMON_CONFIG_FILE=env/common.env yarn cucumber-compile"
   },
   "repository": {
     "type": "git",
