@@ -21,10 +21,11 @@ export async function waitFor(
   globalConfig: GlobalConfig,
   options?: { timeout?: number; wait?: number; target?: WaitForTarget; type?: WaitForTargetType; failureMessage?: string }
 ): Promise<void> {
-  const { timeout = 25000, wait = 2000, target = "", type = "элемент" } = options || {};
+  const { timeout = 25000, wait = 2000, target = "", type = "элемент", failureMessage = "" } = options || {};
 
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const startDate = new Date();
+  let retried = 3;
   let notAvailableContext: string | undefined;
 
   try {
@@ -41,14 +42,19 @@ export async function waitFor(
       if (resultAs === WaitForResult.PASS) {
         return;
       } else if (resultAs === WaitForResult.FAIL) {
-        throw new Error(notAvailableContext || options?.failureMessage || "");
+        if (retried === 0) {
+          throw new Error(notAvailableContext || "");
+        } else {
+          retried -= 1;
+          console.log(`Задержка в утверждении, повторная попытка, осталось попыток = ${retried}`);
+        }
       }
 
       console.log(`Waiting ${wait}ms`);
 
       await sleep(wait);
     }
-    throw new Error(`Время ожидания ${timeout}мс для ${notAvailableContext || target} превышено`);
+    throw new Error(`${notAvailableContext || failureMessage}`);
   } catch (error) {
     handleError(globalConfig.errorsConfig, error as Error, target, type);
   }
@@ -64,7 +70,6 @@ export const waitForSelector = async (
 ): Promise<boolean> => {
   const { state = "visible", timeoutMs = envNumber("SELECTOR_TIMEOUT") } = options || {};
   console.log(state);
-  console.log(elementIdentifier);
   try {
     await page.waitForSelector(elementIdentifier, {
       state,

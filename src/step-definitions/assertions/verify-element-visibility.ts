@@ -18,7 +18,7 @@ Then(/^Элемент "([^"]+)" (не )?должен отображаться$/,
   await waitFor(
     async () => {
       const isElementVisible = await waitForSelector(page, elementIdentifier, { state: negate ? "hidden" : "visible" });
-      console.log(isElementVisible)
+      console.log(isElementVisible);
       if (isElementVisible) {
         return WaitForResult.PASS;
       }

@@ -1,3 +1,3 @@
 profile=$1
 
-yarn cucumber --profile $profile
+yarn cucumber:localhost --profile $profile

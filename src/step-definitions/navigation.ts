@@ -13,11 +13,11 @@ Given(/^Я нахожусь на странице "([^"]+)"$/, async function (t
   console.log(`Я нахожусь на странице ${pageId}`);
 
   await navigateToPage(page, pageId, globalConfig);
-  
+
   await waitFor(() => currentPathMatchesPageId(page, pageId, globalConfig), globalConfig, {
     target: pageId,
-    type: 'page'
-})
+    type: "page",
+  });
 });
 
 Given(/^Я перенаправляюсь на страницу "([^"]+)"/, async function (this: ScenarioWorld, pageId: PageId) {
@@ -30,6 +30,6 @@ Given(/^Я перенаправляюсь на страницу "([^"]+)"/, asyn
 
   await waitFor(() => currentPathMatchesPageId(page, pageId, globalConfig), globalConfig, {
     target: pageId,
-    type: 'page'
-});
+    type: "page",
+  });
 });

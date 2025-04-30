@@ -3,7 +3,6 @@ import { ScenarioWorld } from "./setup/world";
 import { getElementLocator } from "../support/web-element-helper";
 import { waitFor, WaitForResult, waitForSelector, waitForSelectorAtIndex } from "../support/wait-for-behavior";
 import {
-  changeElementDirection,
   getAttributeText,
   getElements,
   inputElementValue,
@@ -13,6 +12,8 @@ import {
 } from "../support/html-behavior";
 import { ElementKey, ElementLocator } from "../env/global";
 import { uploadFile } from "../support/action";
+import { changeElementDirection } from "../support/html-helper";
+import { parseInput } from "../support/input-helper";
 
 Then(
   /^Я заполняю поле "([^"]+)" значением "([^"]+)"( из глобального хранилища)?$/,
@@ -35,7 +36,8 @@ Then(
           await inputElementValue(page, elementIdentifier, valueGlobalStorage);
           return WaitForResult.PASS;
         } else if (result) {
-          await inputElementValue(page, elementIdentifier, inputText);
+          const parsedInput = parseInput(inputText, globalConfig)
+          await inputElementValue(page, elementIdentifier, parsedInput);
           return WaitForResult.PASS;
         }
         return WaitForResult.ELEMENT_NOT_AVAILABLE;

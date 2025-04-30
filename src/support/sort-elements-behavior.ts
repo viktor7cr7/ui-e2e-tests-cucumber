@@ -1,6 +1,6 @@
 import { ElementHandle, Page } from "playwright";
 import { ElementLocator } from "../env/global";
-import { getNumberText } from "./html-behavior";
+import { getNumberText } from "../support/html-helper";
 import { dateNormalize } from "./date-normalize-behavior";
 
 export const sortTextElements = async (elementsNumber: number[] | string[], optionSort: string): Promise<boolean> => {
@@ -50,10 +50,8 @@ export const sortDates = (dates: string[], sortOption: string): boolean => {
       const prevDate = dates[index - 1];
       const currentDate = dates[index];
       if (new Date(prevDate) >= new Date(currentDate)) {
-        console.log(prevDate)
         return true;
       }
-      console.log(currentDate)
       return false;
     });
   }
@@ -80,16 +78,20 @@ export const sortDates = (dates: string[], sortOption: string): boolean => {
   }
 };
 
-export const checkSortElementsDate = async (elemens: ElementHandle<HTMLElement | SVGAElement>[], sortOption: string, localeDate?: boolean) => {
+export const checkSortElementsDate = async (
+  elemens: ElementHandle<HTMLElement | SVGAElement>[],
+  sortOption: string,
+  localeDate?: boolean
+) => {
   const datesNormalize = Promise.all(
     elemens.map(async (date) => {
       const textDate = (await date.textContent()) as string;
       if (localeDate) {
         const date = dateNormalize(textDate);
-      const [day, month, year] = date.split(".");
-      return `${month}.${day}.${year}`;
+        const [day, month, year] = date.split(".");
+        return `${month}.${day}.${year}`;
       } else {
-        return textDate
+        return textDate;
       }
     })
   );
