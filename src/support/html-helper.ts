@@ -1,24 +1,21 @@
-import { ElementHandle, Page } from "playwright";
+import { ElementHandle, Locator, Page } from "playwright";
 import { ElementLocator } from "../env/global";
+import { locatorToArray } from "./locator-helper";
 
-export const checkedMatchText = async (
-  elementsCollection: ElementHandle<HTMLElement | SVGElement>[],
-  expectedElementText: string
-): Promise<boolean> => {
+export const checkedMatchText = async (elementLocator: Locator, expectedElementText: string): Promise<boolean> => {
+  const elementsLocator = await locatorToArray(elementLocator);
   return !(
     await Promise.all(
-      elementsCollection.map(async (element) => !(await element.textContent())?.trim().toLocaleLowerCase().includes(expectedElementText))
+      elementsLocator.map(async (element) => !(await element.textContent())?.trim().toLocaleLowerCase().includes(expectedElementText))
     )
   ).some(Boolean);
 };
 
-export const checkedEqualText = async (
-  elementsCollection: ElementHandle<HTMLElement | SVGElement>[],
-  expectedElementText: string
-): Promise<boolean> => {
+export const checkedEqualText = async (elementLocator: Locator, expectedElementText: string): Promise<boolean> => {
+  const elementsLocator = await locatorToArray(elementLocator);
   return !(
     await Promise.all(
-      elementsCollection.map(async (element) => !((await element.textContent())?.trim().toLocaleLowerCase() === expectedElementText))
+      elementsLocator.map(async (element) => !((await element.textContent())?.trim().toLocaleLowerCase() === expectedElementText))
     )
   ).some(Boolean);
 };

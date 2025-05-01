@@ -46,13 +46,13 @@ Then(
         const elementsStable = await waitForSelector(page, elementIdentifier);
 
         if (elementsStable) {
-          const result = await getElements(page, elementIdentifier);
-          if (result) {
-            return result.length === Number(countElements)
+          const count = await (await getElements(page, elementIdentifier)).count();
+          if (count) {
+            return count === Number(countElements)
               ? { result: WaitForResult.PASS }
               : {
                   result: WaitForResult.FAIL,
-                  replace: `Текущее количество отображаемых элементов ${result.length} не совпадает с ожидаемым ${countElements}`,
+                  replace: `Текущее количество отображаемых элементов ${count} не совпадает с ожидаемым ${countElements}`,
                 };
           }
         }
@@ -79,7 +79,7 @@ Then(
 
     const index =
       positionElement === "последнего"
-        ? (await getElements(page, positionElement))!.length - 1
+        ? await (await getElements(page, positionElement)).count() - 1
         : Number(positionElement.replace(/\D/g, "")) - 1;
 
     const elementIdentifier = getElementLocator(page, elementKey, globalConfig);

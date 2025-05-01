@@ -1,14 +1,15 @@
 import { ElementHandle, Locator, Page } from "playwright";
 import { ElementLocator } from "../env/global";
 import { checkedEqualText, checkedMatchText } from "./html-helper";
+import { locatorToArray } from "./locator-helper";
 
 export const clickElement = async (page: Page, elementIdentifier: ElementLocator): Promise<void> => {
   await page.click(elementIdentifier);
 };
 
-export const clickElementAtIndex = async (page: Page, elementIdentifier: ElementLocator, elementPosition: number): Promise<void> => {
-  const element = await page.$(`${elementIdentifier}>>nth=${elementPosition}`);
-  await element?.click();
+export const clickElementAtIndex = async (page: Page, elementIdentifier: ElementLocator, index: number): Promise<void> => {
+  const element = await page.locator(elementIdentifier).nth(index);
+  await element.click();
 };
 
 export const clickElementToLocator = async (elementLocator: Locator) => {
@@ -17,49 +18,37 @@ export const clickElementToLocator = async (elementLocator: Locator) => {
 
 export const hoverElementAtIndex = async (page: Page, elementIdentifier: ElementLocator, index: number): Promise<void> => {
   const element = await getElementAtIndex(page, elementIdentifier, index);
-  await element?.hover();
+  await element.hover();
 };
 
-export const getElement = async (page: Page, elementLocator: ElementLocator): Promise<ElementHandle<HTMLElement | SVGElement> | null> => {
-  const element = await page.$(elementLocator);
+export const getElement = async (page: Page, elementLocator: ElementLocator): Promise<Locator> => {
+  const element = page.locator(elementLocator);
   return element;
 };
 
-export const getElements = async (
-  page: Page,
-  elementLocator: ElementLocator
-): Promise<ElementHandle<HTMLElement | SVGElement>[] | null> => {
-  const element = await page.$$(elementLocator);
+export const getElements = async (page: Page, elementLocator: ElementLocator): Promise<Locator> => {
+  const element = page.locator(elementLocator);
   return element;
 };
 
-export const getElementAtIndex = async (
-  page: Page,
-  elementIdentifier: ElementLocator,
-  elementPosition: number
-): Promise<ElementHandle<HTMLElement | SVGElement> | null> => {
-  const element = await page.$(`${elementIdentifier}>>nth=${elementPosition}`);
+export const getElementAtIndex = async (page: Page, elementIdentifier: ElementLocator, elementPosition: number): Promise<Locator> => {
+  const element = page.locator(elementIdentifier).nth(elementPosition);
   return element;
 };
 
 export const getElementText = async (page: Page, elementIdentifier: ElementLocator): Promise<string | null> => {
-  const elementText = await page.textContent(elementIdentifier);
-  return elementText;
+  const locator = await page.locator(elementIdentifier);
+  return await locator.textContent();
 };
 
-export const getElementsText = async (page: Page, elementIdentifier: ElementLocator): Promise<string[]> => {
-  const elements = await page.$$(elementIdentifier);
-  const elementsText = (await Promise.all(
-    elements.map(async (element) => {
-      return await element.textContent();
-    })
-  )) as unknown as string[];
-  return elementsText;
+export const getElementsText = async (page: Page, elementIdentifier: ElementLocator): Promise<(string | null)[]> => {
+  const elements = await locatorToArray(await getElements(page, elementIdentifier));
+  return await Promise.all(elements.map(async (element) => element.textContent()));
 };
 
-export const getElementTextAtIndex = async (page: Page, elementIdentifier: ElementLocator, index: number): Promise<string | null> => {
-  const textAtIndex = await page.textContent(`${elementIdentifier}>>nth=${index}`);
-  return textAtIndex;
+export const getElementTextAtIndex = async (page: Page, elementIdentifier: ElementLocator, index: number): Promise<string> => {
+  const locatorAtIndex = page.locator(elementIdentifier).nth(index);
+  return (await locatorAtIndex.textContent()) as string;
 };
 
 export const getElementByText = async (page: Page, elementLocator: ElementLocator, text: string) => {
@@ -67,27 +56,17 @@ export const getElementByText = async (page: Page, elementLocator: ElementLocato
   return element;
 };
 
-export const getElementValue = async (page: Page, elementIdentifier: ElementLocator): Promise<string | null> => {
-  const value = await page.$eval<string, HTMLSelectElement>(elementIdentifier, (element) => {
-    return element.value;
-  });
-  return value;
+export const getElementValue = async (page: Page, elementIdentifier: ElementLocator): Promise<string> => {
+  return (await page.locator(elementIdentifier).inputValue()) as string;
 };
 
-export const getElementValueAtIndex = async (
-  page: Page,
-  elementIdentifier: ElementLocator,
-  elementPosition: number
-): Promise<string | null> => {
-  const value = await page.$eval<string, HTMLSelectElement>(`${elementIdentifier}>>nth=${elementPosition}`, (element) => {
-    return element.value;
-  });
-  return value;
+export const getElementValueAtIndex = async (page: Page, elementIdentifier: ElementLocator, index: number): Promise<string> => {
+  return await page.locator(elementIdentifier).nth(index).inputValue();
 };
 
-export const getElementsAttribute = async (page: Page, attributeKey: string) => {
-  const elements = await page.$$(attributeKey);
-  return elements.length;
+export const getLengthElements = async (page: Page, selector: string) => {
+  const elementsLenght = await page.locator(selector).count();
+  return elementsLenght;
 };
 
 export const getAttributeText = async (page: Page, elementIdentifier: ElementLocator, attribute: string): Promise<string | null> => {
@@ -106,26 +85,23 @@ export const inputElementValueAtIndex = async (
   inputValue: string,
   index: number
 ): Promise<void> => {
-  await page.fill(`${elementLocator}>>nth=${index}`, inputValue);
+  await page.locator(elementLocator).nth(index).fill(inputValue);
 };
 
 export const selectElementValue = async (page: Page, elementIdentifier: ElementLocator, option: string) => {
-  await page.focus(elementIdentifier);
-  await page.selectOption(elementIdentifier, option);
+  await page.locator(elementIdentifier).selectOption(option);
 };
 
 export const selectElementValueAtIndex = async (page: Page, elementIdentifier: ElementLocator, option: string, index: number) => {
-  await page.focus(elementIdentifier);
-  await page.selectOption(`${elementIdentifier}>>nth=${index}`, option);
+  await page.locator(elementIdentifier).nth(index).selectOption(option);
 };
 
-
 export const equalElementsText = async (page: Page, elementLocator: ElementLocator, expectedElementText: string) => {
-  const elementsText = await page.$$(elementLocator);
-  return checkedEqualText(elementsText, expectedElementText.toLowerCase());
+  const elementsLocator = page.locator(elementLocator);
+  return checkedEqualText(elementsLocator, expectedElementText.toLowerCase());
 };
 
 export const elementsToContainText = async (page: Page, elementLocator: ElementLocator, expectedElementText: string): Promise<boolean> => {
-  const elementsText = await page.$$(elementLocator);
-  return checkedMatchText(elementsText, expectedElementText.toLowerCase());
+  const elementsLocator = page.locator(elementLocator);
+  return checkedMatchText(elementsLocator, expectedElementText.toLowerCase());
 };

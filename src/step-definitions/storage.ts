@@ -103,7 +103,7 @@ Then(
 
     const index =
       elementPosition === "последнего"
-        ? (await getElements(page, elementIdentifier))!.length - 1
+        ? await (await getElements(page, elementIdentifier)).count() - 1
         : Number(elementPosition.replace(/\D/g, "")) - 1;
 
     await waitFor(
@@ -195,7 +195,7 @@ Then(
 
     const index =
       elementPosition === "последнего"
-        ? (await getElements(page, elementIdentifier))!.length - 1
+        ? await (await getElements(page, elementIdentifier)).count() - 1
         : Number(elementPosition.replace(/\D/g, "")) - 1;
 
     await waitFor(

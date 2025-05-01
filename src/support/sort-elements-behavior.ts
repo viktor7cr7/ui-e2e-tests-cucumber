@@ -1,7 +1,8 @@
-import { ElementHandle, Page } from "playwright";
+import { ElementHandle, Locator, Page } from "playwright";
 import { ElementLocator } from "../env/global";
 import { getNumberText } from "../support/html-helper";
 import { dateNormalize } from "./date-normalize-behavior";
+import { locatorToArray } from "./locator-helper";
 
 export const sortTextElements = async (elementsNumber: number[] | string[], optionSort: string): Promise<boolean> => {
   const sort = optionSort === "убыванию" ? "desc" : "asc";
@@ -79,13 +80,14 @@ export const sortDates = (dates: string[], sortOption: string): boolean => {
 };
 
 export const checkSortElementsDate = async (
-  elemens: ElementHandle<HTMLElement | SVGAElement>[],
+  elements: Locator,
   sortOption: string,
   localeDate?: boolean
 ) => {
+  const arrayLocators = await locatorToArray(elements)
   const datesNormalize = Promise.all(
-    elemens.map(async (date) => {
-      const textDate = (await date.textContent()) as string;
+    arrayLocators.map(async (date) => {
+      const textDate = (await date.textContent())?.trim() ?? '';
       if (localeDate) {
         const date = dateNormalize(textDate);
         const [day, month, year] = date.split(".");

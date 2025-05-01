@@ -2,7 +2,7 @@ import { Then } from "@cucumber/cucumber";
 import { ElementLocator } from "../../env/global";
 import { ScenarioWorld } from "../setup/world";
 import { waitFor, WaitForResult, waitForSelector } from "../../support/wait-for-behavior";
-import { getElementsAttribute } from "../../support/html-behavior";
+import { getLengthElements } from "../../support/html-behavior";
 import { getElementLocator } from "../../support/web-element-helper";
 
 Then(
@@ -21,7 +21,7 @@ Then(
       const elementStable = await waitForSelector(page, elementIdentifier, { state: "attached" });
 
       if (elementStable) {
-        const countAttributePage = await getElementsAttribute(page, elementIdentifier);
+        const countAttributePage = await getLengthElements(page, elementIdentifier);
         return countAttributePage === +count
           ? { result: WaitForResult.PASS }
           : {

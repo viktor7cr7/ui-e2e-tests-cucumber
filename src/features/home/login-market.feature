@@ -1,6 +1,5 @@
 Feature: Авторизация в магазине через логин/пароль
 
-    @dev
     Scenario: Успешная авторизация в магазине
     Given Я нахожусь на странице "home"
     Then Я заполняю поле "email shop input" значением "$.EMAIL_SHOP_LOGIN"

@@ -58,7 +58,7 @@ Then(
 
     await waitFor(
       async () => {
-        const stableElement = (await getElements(page, elementIdentifier)) !== null;
+        const stableElement = await (await getElements(page, elementIdentifier)).count();
 
         if (stableElement) {
           const result = await elementsToContainText(page, elementIdentifier, expectedText);
@@ -166,7 +166,7 @@ Then(
 
     const index =
       elementPosition === "последний"
-        ? (await getElements(page, elementIdentifier))!.length - 1
+        ? (await (await getElements(page, elementIdentifier)).count()) - 1
         : Number(elementPosition.replace(/\D/g, "")) - 1;
 
     await waitFor(
@@ -206,7 +206,7 @@ Then(
 
     await waitFor(
       async () => {
-        const stableElement = (await page.$$(elementIdentifier)) !== null;
+        const stableElement = await (await getElements(page, elementIdentifier)).count();
 
         if (stableElement) {
           const result = await equalElementsText(page, elementIdentifier, expectedText);
@@ -244,14 +244,14 @@ Then(
         const elementStable = await waitForSelector(page, elementIdentifier, { state: "attached" });
 
         if (elementStable) {
-          const elementAttribute = await getElementValue(page, elementIdentifier);
-          return (elementAttribute === expectedText) === !negate
+          const elementValue = await getElementValue(page, elementIdentifier);
+          return (elementValue === expectedText) === !negate
             ? { result: WaitForResult.PASS }
             : {
                 result: WaitForResult.FAIL,
                 replace: `Не пройдено условие: ${elementKey} должен быть ${
                   negate ? "не " : ""
-                }равен значению ${expectedText}. Ожидаемый текст - ${expectedText}. Фактический текст - ${elementAttribute}. Negate = ${negate}`,
+                }равен значению ${expectedText}. Ожидаемый текст - ${expectedText}. Фактический текст - ${elementValue}. Negate = ${negate}`,
               };
         }
         return {
@@ -282,8 +282,8 @@ Then(
         const elementStable = await waitForSelector(page, elementIdentifier, { state: "attached" });
 
         if (elementStable) {
-          const elementAttribute = await getElementValue(page, elementIdentifier);
-          return (elementAttribute === expectedText) === !negate
+          const elementValue = await getElementValue(page, elementIdentifier);
+          return (elementValue === expectedText) === !negate
             ? { result: WaitForResult.PASS }
             : {
                 result: WaitForResult.FAIL,
@@ -320,14 +320,14 @@ Then(
         const elementStable = await waitForSelector(page, elementIdentifier, { state: "attached" });
 
         if (elementStable) {
-          const elementAttribute = await getElementValue(page, elementIdentifier);
-          return elementAttribute?.includes(expectedText) === !negate
+          const elementValue = await getElementValue(page, elementIdentifier);
+          return elementValue?.includes(expectedText) === !negate
             ? { result: WaitForResult.PASS }
             : {
                 result: WaitForResult.FAIL,
                 replace: `Не пройдено условие: Значение элемента ${elementKey} ${
                   negate ? "не " : ""
-                }должно содержать текст ${expectedText}. Ожидаемый текст - ${expectedText}. Фактический текст - ${elementAttribute}. Negate = ${negate}`,
+                }должно содержать текст ${expectedText}. Ожидаемый текст - ${expectedText}. Фактический текст - ${elementValue}. Negate = ${negate}`,
               };
         }
         return {
@@ -431,7 +431,7 @@ Then(
 
     await waitFor(
       async () => {
-        const elementsStable = (await getElements(page, elementIdentifier)) !== null;
+        const elementsStable = await (await getElements(page, elementIdentifier)).count();
 
         if (elementsStable) {
           let resultSort: boolean;
@@ -440,7 +440,7 @@ Then(
               resultSort = await sortNumberElements(page, elementIdentifier, sortOption);
               break;
             case "string":
-              const textElements = await getElementsText(page, elementIdentifier);
+              const textElements = await getElementsText(page, elementIdentifier) as string[];
               resultSort = await sortTextElements(textElements, sortOption);
               break;
           }
@@ -476,7 +476,7 @@ Then(
 
     const index =
       elementPosition === "последнего"
-        ? (await getElements(page, elementIdentifier))!.length - 1
+        ? (await (await getElements(page, elementIdentifier))!.count()) - 1
         : Number(elementPosition.replace(/\D/g, "")) - 1;
 
     await waitFor(

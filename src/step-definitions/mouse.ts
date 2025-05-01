@@ -87,7 +87,7 @@ When(
 
     const index =
       elementPosition === "последнюю"
-        ? (await getElements(page, elementIdentifier))!.length - 1
+        ? await (await getElements(page, elementIdentifier)).count() - 1
         : Number(elementPosition.replace(/\D/g, "")) - 1;
 
     await waitFor(

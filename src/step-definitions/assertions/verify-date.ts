@@ -61,7 +61,7 @@ Then(
 
     const index =
       positionElement === "последнего"
-        ? (await getElements(page, elementIdentifier))!.length - 1
+        ? await (await getElements(page, elementIdentifier)).count() - 1
         : Number(positionElement.replace(/\D/g, "")) - 1;
 
     await waitFor(
@@ -108,10 +108,10 @@ Then(
 
     await waitFor(
       async () => {
-        const elementStable = (await getElements(page, elementIdentifier)) != null;
+        const elementStable = (await getElements(page, elementIdentifier)).count() != null;
 
         if (elementStable) {
-          const elementsDate = (await getElements(page, elementIdentifier)) as ElementHandle<HTMLElement>[];
+          const elementsDate = (await getElements(page, elementIdentifier));
           return (await checkSortElementsDate(elementsDate, sortOption, local))
             ? { result: WaitForResult.PASS }
             : { result: WaitForResult.FAIL, replace: `Элементы не отсортированы по ${sortOption}` };
