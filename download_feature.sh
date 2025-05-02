@@ -67,7 +67,8 @@ else
   script=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
     -H "Authorization: Bearer $ZEPHYR_TOKEN" \
     -H "Accept: application/json" | jq -r '.text')
-
+  echo "Response: ${response}"
+  
   # Если файл уже существует, удаляем его перед перезаписью
   if [ -f "$feature_file" ]; then
     echo "❗ Файл $feature_file уже существует, перезаписываю..."
@@ -76,7 +77,9 @@ else
 
   # Сохраняем текст сценария в файл
   echo "$script" > "$feature_file"
-
+  
+  echo "Current body: $feature_file"
+  
   # Добавляем тег @zephyr, если его нет
   add_zephyr_tag "$feature_file" "$feature_file"
 
