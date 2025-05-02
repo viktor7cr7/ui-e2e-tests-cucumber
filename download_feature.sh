@@ -50,12 +50,30 @@ if [ "$KEY_OR_MODE" = "all" ]; then
 else
   TEST_KEY=$KEY_OR_MODE
   echo "📥 Загружаю один .feature из Zephyr для ключа: $TEST_KEY"
-  
-  script=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
+
+  # Получаем JSON
+  response=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
     -H "Authorization: Bearer $ZEPHYR_TOKEN" \
     -H "Accept: application/json")
-    
-  # Сохраняем текст сценария во временный файл
+
+  # Проверка на ошибку
+  if echo "$response" | grep -q '"errorCode"'; then
+    echo "❌ Ошибка при получении сценария:"
+    echo "$response"
+    exit 1
+  fi
+
+  # Извлекаем значение поля "text"
+  script=$(echo "$response" | sed -n 's/.*"text":"\([^"]*\)".*/\1/p' | sed 's/\\n/\n/g' | sed 's/\\"/"/g')
+
+  # Проверка, что текст не пустой
+  if [ -z "$script" ]; then
+    echo "⚠️ Не удалось извлечь текст сценария из ответа."
+    echo "$response"
+    exit 1
+  fi
+
+  # Сохраняем как .feature
   echo "$script" > tmp.feature
 
   # Добавляем тег @zephyr, если его нет
