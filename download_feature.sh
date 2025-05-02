@@ -51,33 +51,28 @@ else
   TEST_KEY=$KEY_OR_MODE
   echo "📥 Загружаю один .feature из Zephyr для ключа: $TEST_KEY"
 
-  # Получаем JSON
-  response=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
+  # Получаем ответ от API и сохраняем в файл для отладки
+  json=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
     -H "Authorization: Bearer $ZEPHYR_TOKEN" \
     -H "Accept: application/json")
 
-  # Проверка на ошибку
-  if echo "$response" | grep -q '"errorCode"'; then
-    echo "❌ Ошибка при получении сценария:"
-    echo "$response"
+  echo "$json" > tmp_response.json
+
+  # Проверяем, что в ответе есть поле "text"
+  if echo "$json" | grep -q '"text":'; then
+    # Извлекаем значение поля text вручную (без jq)
+    script=$(echo "$json" | sed -n 's/.*"text":"\([^"]*\)".*/\1/p' | sed 's/\\n/\n/g' | sed 's/\\"/"/g')
+
+    echo "$script" > tmp.feature
+
+    # Добавляем тег @zephyr, если его нет
+    add_zephyr_tag tmp.feature "$FEATURES_DIR/${TEST_KEY}.feature"
+
+    echo "✅ Готово: $FEATURES_DIR/${TEST_KEY}.feature"
+  else
+    echo "❌ Ошибка: не удалось получить .feature из Zephyr"
+    echo "ℹ️ Ответ сохранён в tmp_response.json:"
+    cat tmp_response.json
     exit 1
   fi
-
-  # Извлекаем значение поля "text"
-  script=$(echo "$response" | sed -n 's/.*"text":"\([^"]*\)".*/\1/p' | sed 's/\\n/\n/g' | sed 's/\\"/"/g')
-
-  # Проверка, что текст не пустой
-  if [ -z "$script" ]; then
-    echo "⚠️ Не удалось извлечь текст сценария из ответа."
-    echo "$response"
-    exit 1
-  fi
-
-  # Сохраняем как .feature
-  echo "$script" > tmp.feature
-
-  # Добавляем тег @zephyr, если его нет
-  add_zephyr_tag tmp.feature "$FEATURES_DIR/${TEST_KEY}.feature"
-
-  echo "✅ Готово: $FEATURES_DIR/${TEST_KEY}.feature"
 fi
