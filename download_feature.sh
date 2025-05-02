@@ -66,8 +66,8 @@ else
   # Получаем текст теста по ключу
   script=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
     -H "Authorization: Bearer $ZEPHYR_TOKEN" \
-    -H "Accept: application/json" | jq -r '.text')
-  echo "Response: ${response}"
+    -H "Accept: application/json")
+  echo "Response: ${script}"
   
   # Если файл уже существует, удаляем его перед перезаписью
   if [ -f "$feature_file" ]; then
