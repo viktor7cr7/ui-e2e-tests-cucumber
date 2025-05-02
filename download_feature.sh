@@ -8,16 +8,18 @@ mkdir -p $FEATURES_DIR
 add_zephyr_tag() {
   local input_file=$1
   local output_file=$2
-
   if grep -q "^@.*" "$input_file"; then
     echo "ℹ️ Файл уже содержит теги — оставляем как есть"
-    cp "$input_file" "$output_file"  # Просто копируем файл без изменений
+    cp "$input_file" "$output_file"
   else
     echo "🏷 Добавляю тег @zephyr"
+    tmp_file=$(mktemp)
     awk 'BEGIN {added=0}
          /^Scenario:/ && !added {print "@zephyr"; added=1}
-         {print}' "$input_file" > "$output_file"
+         {print}' "$input_file" > "$tmp_file"
+    mv "$tmp_file" "$output_file"
   fi
+  rm -f "$input_file"
 }
 
 if [ "$KEY_OR_MODE" = "all" ]; then
@@ -60,28 +62,31 @@ else
   TEST_KEY=$KEY_OR_MODE
   echo "📥 Загружаю один .feature из Zephyr для ключа: $TEST_KEY"
 
-  # Путь к файлу с тестом
+  # Путь к финальному файлу
   feature_file="$FEATURES_DIR/${TEST_KEY}.feature"
+  tmp_file="tmp.feature"
 
-  # Получаем текст теста по ключу
-  script=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
+  # Получаем JSON с телом теста
+  response=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
     -H "Authorization: Bearer $ZEPHYR_TOKEN" \
     -H "Accept: application/json")
-  echo "Response: ${script}"
-  
-  # Если файл уже существует, удаляем его перед перезаписью
-  if [ -f "$feature_file" ]; then
-    echo "❗ Файл $feature_file уже существует, перезаписываю..."
-    rm "$feature_file"
+
+  echo "Response: ${response}"
+
+  # Извлекаем значение поля text вручную
+  script=$(echo "$response" | grep -o '"text":"[^"]*' | sed 's/"text":"//' | sed 's/\\n/\n/g' | sed 's/\\"/"/g')
+
+  # Проверка: если `script` содержит errorCode — это ошибка
+  if echo "$script" | grep -q '"errorCode"'; then
+    echo "❌ Получен ответ об ошибке от Zephyr: $script"
+    exit 1
   fi
 
-  # Сохраняем текст сценария в файл
-  echo "$script" > "$feature_file"
-  
-  echo "Current body: $feature_file"
-  
-  # Добавляем тег @zephyr, если его нет
-  add_zephyr_tag "$feature_file" "$feature_file"
+  # Сохраняем чистый Gherkin в tmp файл
+  echo "$script" > "$tmp_file"
+
+  # Добавляем тег и записываем в целевой файл
+  add_zephyr_tag "$tmp_file" "$feature_file"
 
   echo "✅ Готово: $feature_file"
 fi
