@@ -55,7 +55,8 @@ else
   script=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
     -H "Authorization: Bearer $ZEPHYR_TOKEN" \
     -H "Accept: application/json" | jq -r '.text')
-
+  echo "responseZephyr = $script"
+  ech "ТестКей = ${TEST_KEY}"
   # Сохраняем текст сценария во временный файл
   echo "$script" > tmp.feature
 
