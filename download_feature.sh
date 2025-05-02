@@ -39,11 +39,20 @@ if [ "$KEY_OR_MODE" = "all" ]; then
       -H "Authorization: Bearer $ZEPHYR_TOKEN" \
       -H "Accept: application/json" | jq -r '.text')
 
-    # Сохраняем текст сценария во временный файл
-    echo "$script" > tmp.feature
+    # Путь к файлу с тестом
+    feature_file="$FEATURES_DIR/${TEST_KEY}.feature"
+
+    # Если файл уже существует, удаляем его перед перезаписью
+    if [ -f "$feature_file" ]; then
+      echo "❗ Файл $feature_file уже существует, перезаписываю..."
+      rm "$feature_file"
+    fi
+
+    # Сохраняем текст сценария в файл
+    echo "$script" > "$feature_file"
 
     # Добавляем тег @zephyr, если его нет
-    add_zephyr_tag tmp.feature "$FEATURES_DIR/${TEST_KEY}.feature"
+    add_zephyr_tag "$feature_file" "$feature_file"
   done
 
   echo "✅ Загружено: $(echo "$keys" | wc -l) тестов"
@@ -51,28 +60,25 @@ else
   TEST_KEY=$KEY_OR_MODE
   echo "📥 Загружаю один .feature из Zephyr для ключа: $TEST_KEY"
 
-  # Получаем ответ от API и сохраняем в файл для отладки
-  json=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
+  # Путь к файлу с тестом
+  feature_file="$FEATURES_DIR/${TEST_KEY}.feature"
+
+  # Получаем текст теста по ключу
+  script=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
     -H "Authorization: Bearer $ZEPHYR_TOKEN" \
-    -H "Accept: application/json")
+    -H "Accept: application/json" | jq -r '.text')
 
-  echo "$json" > tmp_response.json
-
-  # Проверяем, что в ответе есть поле "text"
-  if echo "$json" | grep -q '"text":'; then
-    # Извлекаем значение поля text вручную (без jq)
-    script=$(echo "$json" | sed -n 's/.*"text":"\([^"]*\)".*/\1/p' | sed 's/\\n/\n/g' | sed 's/\\"/"/g')
-
-    echo "$script" > tmp.feature
-
-    # Добавляем тег @zephyr, если его нет
-    add_zephyr_tag tmp.feature "$FEATURES_DIR/${TEST_KEY}.feature"
-
-    echo "✅ Готово: $FEATURES_DIR/${TEST_KEY}.feature"
-  else
-    echo "❌ Ошибка: не удалось получить .feature из Zephyr"
-    echo "ℹ️ Ответ сохранён в tmp_response.json:"
-    cat tmp_response.json
-    exit 1
+  # Если файл уже существует, удаляем его перед перезаписью
+  if [ -f "$feature_file" ]; then
+    echo "❗ Файл $feature_file уже существует, перезаписываю..."
+    rm "$feature_file"
   fi
+
+  # Сохраняем текст сценария в файл
+  echo "$script" > "$feature_file"
+
+  # Добавляем тег @zephyr, если его нет
+  add_zephyr_tag "$feature_file" "$feature_file"
+
+  echo "✅ Готово: $feature_file"
 fi
