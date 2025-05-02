@@ -8,15 +8,15 @@ mkdir -p $FEATURES_DIR
 add_zephyr_tag() {
   local input_file=$1
   local output_file=$2
+
   if grep -q "^@.*" "$input_file"; then
     echo "ℹ️ Файл уже содержит теги — оставляем как есть"
-    mv "$input_file" "$output_file"
+    cp "$input_file" "$output_file"  # Просто копируем файл без изменений
   else
     echo "🏷 Добавляю тег @zephyr"
     awk 'BEGIN {added=0}
          /^Scenario:/ && !added {print "@zephyr"; added=1}
          {print}' "$input_file" > "$output_file"
-    rm "$input_file"
   fi
 }
 
