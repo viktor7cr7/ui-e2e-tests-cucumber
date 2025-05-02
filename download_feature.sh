@@ -25,19 +25,24 @@ if [ "$KEY_OR_MODE" = "all" ]; then
 
   # Получение всех кейсов (максимум 1000)
   response=$(curl -s -X GET \
-    "https://api.zephyrscale.smartbear.com/v2/testcases?projectKey=${PROJECT_KEY}&maxResults=1000" \
+    "https://eu.api.zephyrscale.smartbear.com/v2/testcases?projectKey=${PROJECT_KEY}&maxResults=1000" \
     -H "Authorization: Bearer $ZEPHYR_TOKEN" \
     -H "Accept: application/json")
 
   # Извлекаем ключи всех тестов
-  keys=$(echo "$response" | grep -oE '"key":"[^"]+"' | cut -d':' -f2 | tr -d '"')
+  keys=$(echo "$response" | jq -r '.values[].key')
 
   for TEST_KEY in $keys; do
     echo "▶ Загрузка кейса: $TEST_KEY"
-    curl -s -X GET "https://api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
+    # Извлекаем текст сценария из ответа JSON
+    script=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
       -H "Authorization: Bearer $ZEPHYR_TOKEN" \
-      -H "Accept: text/plain" > tmp.feature
+      -H "Accept: application/json" | jq -r '.text')
 
+    # Сохраняем текст сценария во временный файл
+    echo "$script" > tmp.feature
+
+    # Добавляем тег @zephyr, если его нет
     add_zephyr_tag tmp.feature "$FEATURES_DIR/${TEST_KEY}.feature"
   done
 
@@ -46,10 +51,15 @@ else
   TEST_KEY=$KEY_OR_MODE
   echo "📥 Загружаю один .feature из Zephyr для ключа: $TEST_KEY"
 
-  curl -s -X GET "https://api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
+  # Получаем текст теста по ключу
+  script=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
     -H "Authorization: Bearer $ZEPHYR_TOKEN" \
-    -H "Accept: text/plain" > tmp.feature
+    -H "Accept: application/json" | jq -r '.text')
 
+  # Сохраняем текст сценария во временный файл
+  echo "$script" > tmp.feature
+
+  # Добавляем тег @zephyr, если его нет
   add_zephyr_tag tmp.feature "$FEATURES_DIR/${TEST_KEY}.feature"
 
   echo "✅ Готово: $FEATURES_DIR/${TEST_KEY}.feature"
