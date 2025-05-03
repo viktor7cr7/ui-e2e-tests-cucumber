@@ -4,9 +4,11 @@ JQ_BIN=$3
 PROJECT_KEY="KAN"
 
 FEATURES_DIR="src/features/zephyr"
+ls -l "$FEATURES_DIR"
 mkdir -p $FEATURES_DIR
 
 add_zephyr_tag() {
+  set -x
   local input_file=$1
   local output_file=$2
   if grep -q "^@.*" "$input_file"; then
