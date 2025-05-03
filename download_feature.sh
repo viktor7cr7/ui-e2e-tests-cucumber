@@ -90,6 +90,12 @@ else
     exit 1
   fi
 
+    # Если файл уже существует, удаляем его перед перезаписью
+    if [ -f "$feature_file" ]; then
+      echo "❗ Файл $feature_file уже существует, перезаписываю..."
+      rm "$feature_file"
+    fi
+
     # Создаем заголовки Feature и Scenario
     feature_header="Feature: Тест кейс $TEST_KEY"
     scenario_header=" Scenario: Сценарий для теста $TEST_KEY"
