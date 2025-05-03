@@ -22,6 +22,7 @@ add_zephyr_tag() {
          {print}' "$input_file" > "$tmp_file"
     mv "$tmp_file" "$output_file"
   fi
+  echo "Tmp: ${tmp_file}"
   rm -f "$input_file"
 }
 
