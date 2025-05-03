@@ -5,8 +5,10 @@ PROJECT_KEY="KAN"
 
 FEATURES_DIR="src/features/zephyr"
 mkdir -p $FEATURES_DIR
+ls -l "$FEATURES_DIR"
 
 add_zephyr_tag() {
+  set -x
   local input_file=$1
   local output_file=$2
   if grep -q "^@.*" "$input_file"; then
