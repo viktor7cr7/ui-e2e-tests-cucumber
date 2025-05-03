@@ -76,6 +76,7 @@ else
   # Извлекаем значение поля text вручную
   script=$(echo "$response" | grep -o '"text":"[^"]*' | sed 's/"text":"//' | sed 's/\\n/\n/g' | sed 's/\\"/"/g')
 
+  echo "Script: ${script}"
   # Проверка: если `script` содержит errorCode — это ошибка
   if echo "$script" | grep -q '"errorCode"'; then
     echo "❌ Получен ответ об ошибке от Zephyr: $script"
