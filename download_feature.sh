@@ -4,7 +4,14 @@ JQ_BIN=$3
 PROJECT_KEY="KAN"
 
 FEATURES_DIR="src/features/zephyr"
-mkdir -p $FEATURES_DIR
+
+echo "Удаляю все тест-кейсы из папки Zephyr: $FEATURES_DIR"
+rm -rf "$FEATURES_DIR"
+
+echo "Создаю заново пустую папку: $FEATURES_DIR"
+mkdir -p "$FEATURES_DIR"
+
+echo "Содержимое папки после очистки:"
 ls -l "$FEATURES_DIR"
 
 add_zephyr_tag() {
@@ -49,12 +56,6 @@ if [ "$KEY_OR_MODE" = "all" ]; then
     feature_file="$FEATURES_DIR/${TEST_KEY}.feature"
     tmp_file="tmp.feature"
 
-    # Если файл уже существует, удаляем его перед перезаписью
-    if [ -f "$feature_file" ]; then
-      echo "❗ Файл $feature_file уже существует, перезаписываю..."
-      rm "$feature_file"
-    fi
-
     # Создаем заголовки Feature и Scenario
     feature_header="Feature: Тест кейс $TEST_KEY"
     scenario_header="Scenario: Сценарий для теста $TEST_KEY"
@@ -89,12 +90,7 @@ else
     echo "❌ Получен ответ об ошибке от Zephyr: $response"
     exit 1
   fi
-
-    # Если файл уже существует, удаляем его перед перезаписью
-    if [ -f "$feature_file" ]; then
-      echo "❗ Файл $feature_file уже существует, перезаписываю..."
-      rm "$feature_file"
-    fi
+  
 
     # Создаем заголовки Feature и Scenario
     feature_header="Feature: Тест кейс $TEST_KEY"
