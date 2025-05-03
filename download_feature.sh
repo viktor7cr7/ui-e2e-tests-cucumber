@@ -52,7 +52,7 @@ if [ "$KEY_OR_MODE" = "all" ]; then
       echo "❗ Файл $feature_file уже существует, перезаписываю..."
       rm "$feature_file"
     fi
-    
+
     # Создаем заголовки Feature и Scenario
     feature_header="Feature: Тест кейс $TEST_KEY"
     scenario_header="  Scenario: Сценарий для теста $TEST_KEY"
@@ -87,12 +87,18 @@ else
 
   # Проверка: если `script` содержит errorCode — это ошибка
   if echo "$response" | grep -q '"errorCode"'; then
-    echo "❌ Получен ответ об ошибке от Zephyr: $script"
+    echo "❌ Получен ответ об ошибке от Zephyr: $response"
     exit 1
   fi
 
-  # Сохраняем чистый Gherkin в tmp файл
-  echo "$response" > "$tmp_file"
+    # Создаем заголовки Feature и Scenario
+    feature_header="Feature: Тест кейс $TEST_KEY"
+    scenario_header="  Scenario: Сценарий для теста $TEST_KEY"
+
+    # Сохраняем в .feature файл
+    echo "$feature_header" > "$tmp_file"
+    echo "$scenario_header" >> "$tmp_file"
+    echo "$response" >> "$tmp_file"
 
   # Добавляем тег и записываем в целевой файл
   add_zephyr_tag "$tmp_file" "$feature_file"
