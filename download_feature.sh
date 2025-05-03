@@ -36,17 +36,18 @@ if [ "$KEY_OR_MODE" = "all" ]; then
     -H "Accept: application/json")
 
   # Извлекаем ключи всех тестов
-  keys=$(echo "$response" | jq -r '.values[].key')
+  keys=$(echo "$response" | "$JQ_BIN" -r '.values[].key')
 
   for TEST_KEY in $keys; do
     echo "▶ Загрузка кейса: $TEST_KEY"
     # Извлекаем текст сценария из ответа JSON
-    script=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
+    response=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
       -H "Authorization: Bearer $ZEPHYR_TOKEN" \
       -H "Accept: application/json" | "$JQ_BIN" -r '.text')
 
     # Путь к файлу с тестом
     feature_file="$FEATURES_DIR/${TEST_KEY}.feature"
+    tmp_file="tmp.feature"
 
     # Если файл уже существует, удаляем его перед перезаписью
     if [ -f "$feature_file" ]; then
@@ -59,15 +60,12 @@ if [ "$KEY_OR_MODE" = "all" ]; then
     scenario_header="Scenario: Сценарий для теста $TEST_KEY"
 
     # Сохраняем в .feature файл
-    echo "$feature_header" > "$feature_file"
-    echo "$scenario_header" >> "$feature_file"
-    echo "$script" >> "$feature_file"
-
-    # Сохраняем текст сценария в файл
-    echo "$script" > "$feature_file"
+    echo "$feature_header" > "$tmp_file"
+    echo "$scenario_header" >> "$tmp_file"
+    echo "$response" >> "$tmp_file"
 
     # Добавляем тег @zephyr, если его нет
-    add_zephyr_tag "$feature_file" "$feature_file"
+    add_zephyr_tag "$tmp_file" "$feature_file"
   done
 
   echo "✅ Загружено: $(echo "$keys" | wc -l) тестов"
@@ -94,7 +92,7 @@ else
 
     # Создаем заголовки Feature и Scenario
     feature_header="Feature: Тест кейс $TEST_KEY"
-    scenario_header="  Scenario: Сценарий для теста $TEST_KEY"
+    scenario_header=" Scenario: Сценарий для теста $TEST_KEY"
 
     # Сохраняем в .feature файл
     echo "$feature_header" > "$tmp_file"
