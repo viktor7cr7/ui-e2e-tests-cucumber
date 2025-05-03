@@ -18,7 +18,7 @@ add_zephyr_tag() {
     echo "🏷 Добавляю тег @zephyr"
     tmp_file=$(mktemp)
     awk 'BEGIN {added=0}
-         /^Scenario:/ && !added {print "@zephyr"; added=1}
+         /[[:space:]]*Scenario:/ && !added {print "@zephyr"; added=1}
          {print}' "$input_file" > "$tmp_file"
     cat "$tmp_file"
     mv "$tmp_file" "$output_file"
