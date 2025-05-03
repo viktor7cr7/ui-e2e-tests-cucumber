@@ -52,6 +52,15 @@ if [ "$KEY_OR_MODE" = "all" ]; then
       echo "❗ Файл $feature_file уже существует, перезаписываю..."
       rm "$feature_file"
     fi
+    
+    # Создаем заголовки Feature и Scenario
+    feature_header="Feature: Тест кейс $TEST_KEY"
+    scenario_header="  Scenario: Сценарий для теста $TEST_KEY"
+
+    # Сохраняем в .feature файл
+    echo "$feature_header" > "$feature_file"
+    echo "$scenario_header" >> "$feature_file"
+    echo "$script" >> "$feature_file"
 
     # Сохраняем текст сценария в файл
     echo "$script" > "$feature_file"
