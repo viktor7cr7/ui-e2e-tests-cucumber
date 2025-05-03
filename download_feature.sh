@@ -1,5 +1,6 @@
 KEY_OR_MODE=$1
 ZEPHYR_TOKEN=$2
+JQ_BIN=$3
 PROJECT_KEY="KAN"
 
 FEATURES_DIR="src/features/zephyr"
@@ -37,13 +38,22 @@ if [ "$KEY_OR_MODE" = "all" ]; then
     # Извлекаем текст сценария из ответа JSON
     script=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
       -H "Authorization: Bearer $ZEPHYR_TOKEN" \
-      -H "Accept: application/json" | jq -r '.text')
+      -H "Accept: application/json" | "$JQ_BIN" -r '.text')
 
-    # Сохраняем текст сценария во временный файл
-    echo "$script" > tmp.feature
+    # Путь к файлу с тестом
+    feature_file="$FEATURES_DIR/${TEST_KEY}.feature"
+
+    # Если файл уже существует, удаляем его перед перезаписью
+    if [ -f "$feature_file" ]; then
+      echo "❗ Файл $feature_file уже существует, перезаписываю..."
+      rm "$feature_file"
+    fi
+
+    # Сохраняем текст сценария в файл
+    echo "$script" > "$feature_file"
 
     # Добавляем тег @zephyr, если его нет
-    add_zephyr_tag tmp.feature "$FEATURES_DIR/${TEST_KEY}.feature"
+    add_zephyr_tag "$feature_file" "$feature_file"
   done
 
   echo "✅ Загружено: $(echo "$keys" | wc -l) тестов"
@@ -51,16 +61,25 @@ else
   TEST_KEY=$KEY_OR_MODE
   echo "📥 Загружаю один .feature из Zephyr для ключа: $TEST_KEY"
 
+  # Путь к файлу с тестом
+  feature_file="$FEATURES_DIR/${TEST_KEY}.feature"
+
   # Получаем текст теста по ключу
   script=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
     -H "Authorization: Bearer $ZEPHYR_TOKEN" \
-    -H "Accept: application/json" | jq -r '.text')
+    -H "Accept: application/json" | "$JQ_BIN" -r '.text')
 
-  # Сохраняем текст сценария во временный файл
-  echo "$script" > tmp.feature
+  # Если файл уже существует, удаляем его перед перезаписью
+  if [ -f "$feature_file" ]; then
+    echo "❗ Файл $feature_file уже существует, перезаписываю..."
+    rm "$feature_file"
+  fi
+
+  # Сохраняем текст сценария в файл
+  echo "$script" > "$feature_file"
 
   # Добавляем тег @zephyr, если его нет
-  add_zephyr_tag tmp.feature "$FEATURES_DIR/${TEST_KEY}.feature"
+  add_zephyr_tag "$feature_file" "$feature_file"
 
-  echo "✅ Готово: $FEATURES_DIR/${TEST_KEY}.feature"
+  echo "✅ Готово: $feature_file"
 fi
