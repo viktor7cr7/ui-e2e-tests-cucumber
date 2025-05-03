@@ -11,14 +11,16 @@ add_zephyr_tag() {
   local output_file=$2
   if grep -q "^@.*" "$input_file"; then
     echo "ℹ️ Файл уже содержит теги — оставляем как есть"
-    mv "$input_file" "$output_file"
+    cp "$input_file" "$output_file"
   else
     echo "🏷 Добавляю тег @zephyr"
+    tmp_file=$(mktemp)
     awk 'BEGIN {added=0}
          /^Scenario:/ && !added {print "@zephyr"; added=1}
-         {print}' "$input_file" > "$output_file"
-    rm "$input_file"
+         {print}' "$input_file" > "$tmp_file"
+    mv "$tmp_file" "$output_file"
   fi
+  rm -f "$input_file"
 }
 
 if [ "$KEY_OR_MODE" = "all" ]; then
@@ -72,18 +74,14 @@ else
 
   echo "Response: ${response}"
 
-  # Извлекаем значение поля text вручную
-  script=$(echo "$response" | grep -o '"text":"[^"]*' | sed 's/"text":"//' | sed 's/\\n/\n/g' | sed 's/\\"/"/g')
-
-  echo "Script: ${script}"
   # Проверка: если `script` содержит errorCode — это ошибка
-  if echo "$script" | grep -q '"errorCode"'; then
+  if echo "$response" | grep -q '"errorCode"'; then
     echo "❌ Получен ответ об ошибке от Zephyr: $script"
     exit 1
   fi
 
   # Сохраняем чистый Gherkin в tmp файл
-  echo "$script" > "$tmp_file"
+  echo "$response" > "$tmp_file"
 
   # Добавляем тег и записываем в целевой файл
   add_zephyr_tag "$tmp_file" "$feature_file"
