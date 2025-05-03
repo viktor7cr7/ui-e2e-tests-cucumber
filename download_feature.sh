@@ -20,9 +20,9 @@ add_zephyr_tag() {
     awk 'BEGIN {added=0}
          /^Scenario:/ && !added {print "@zephyr"; added=1}
          {print}' "$input_file" > "$tmp_file"
+    cat "$tmp_file"
     mv "$tmp_file" "$output_file"
   fi
-  echo "Tmp: ${tmp_file}"
   rm -f "$input_file"
 }
 
