@@ -55,7 +55,7 @@ if [ "$KEY_OR_MODE" = "all" ]; then
 
     # Создаем заголовки Feature и Scenario
     feature_header="Feature: Тест кейс $TEST_KEY"
-    scenario_header="  Scenario: Сценарий для теста $TEST_KEY"
+    scenario_header="Scenario: Сценарий для теста $TEST_KEY"
 
     # Сохраняем в .feature файл
     echo "$feature_header" > "$feature_file"
