@@ -7,5 +7,5 @@ if [ -z "$TAG" ]; then
   yarn cucumber:localhost --profile dev
 else
   echo "🟢 Запуск тестов с тегом: $TAG"
-  yarn cucumber:localhost --tags "$TAG"
+  yarn cucumber:localhost --profile $TAG
 fi
