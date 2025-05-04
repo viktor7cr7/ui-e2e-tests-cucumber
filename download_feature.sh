@@ -94,13 +94,15 @@ if [ "$KEY_OR_MODE" = "all" ]; then
     
     # Извлекаем текст сценария из ответа JSON
     raw_response=$(get_test_script "$TEST_KEY")
-    response=$(echo "$raw_response" | "$JQ_BIN" -r '.text // empty')
-    if [[ -z "$response" ]]; then
-        echo "Ошибка: Не удалось извлечь поле .text для кейса $TEST_KEY"
+
+    if ! echo "$raw_response" | "$JQ_BIN" -e '.text' >/dev/null 2>&1; then
+        echo "❌ Ошибка: Некорректный JSON или отсутствует поле .text для $TEST_KEY"
+        echo "$raw_response"
         continue
     fi
+
+    response=$(echo "$raw_response" | "$JQ_BIN" -r '.text')
     
-    echo "raw_response = $raw_response"
     echo "Ответ от зефир = $response"
 
     # Путь к файлу с тестом
