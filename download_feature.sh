@@ -78,6 +78,7 @@ if [ "$KEY_OR_MODE" = "all" ]; then
     raw_response=$(get_test_script "$TEST_KEY")
     response=$(echo "$raw_response" | "$JQ_BIN" -r '.text')
     
+    echo "raw_response = $raw_response"
     echo "Ответ от зефир = $response"
 
     # Путь к файлу с тестом
