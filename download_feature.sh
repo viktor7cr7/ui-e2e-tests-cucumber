@@ -50,9 +50,13 @@ if [ "$KEY_OR_MODE" = "all" ]; then
   for TEST_KEY in $keys; do
     echo "▶ Загрузка кейса: $TEST_KEY"
     # Извлекаем текст сценария из ответа JSON
-    response=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
-      -H "Authorization: Bearer $ZEPHYR_TOKEN" \
-      -H "Accept: application/json" | "$JQ_BIN" -r '.text')
+    raw_response=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
+    -H "Authorization: Bearer $ZEPHYR_TOKEN" \
+    -H "Accept: application/json")
+
+    echo "RAW ответ от Zephyr = $raw_response"
+    
+    response=$(echo "$raw_response" | "$JQ_BIN" -r '.text')
     
     echo "Ответ от зефир = $response"
 
