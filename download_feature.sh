@@ -19,21 +19,25 @@ get_test_script() {
   local retries=5
   local delay=2
   local raw_response=""
-  
+  local http_code=""
+
   for attempt in $(seq 1 $retries); do
-    echo "Попытка $attempt получить $test_key..."
-    
-    raw_response=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${test_key}/testscript" \
+    echo "🔄 Попытка $attempt получить $test_key..."
+
+    # Получаем ответ + HTTP статус
+    raw_response=$(curl -s -w "%{http_code}" -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${test_key}/testscript" \
       -H "Authorization: Bearer $ZEPHYR_TOKEN" \
       -H "Accept: application/json")
-    
-    if [[ -n "$raw_response" ]]; then
-      echo "Ответ успешно получен"
-      echo "Delay response = ${raw_response}"
+
+    http_code=${raw_response: -3}
+    raw_response=${raw_response:: -3}
+
+    if [[ $http_code -eq 200 && -n "$raw_response" ]]; then
+      echo "✅ Ответ успешно получен (HTTP $http_code)"
       break
     else
-      echo "⏳ Ответ пустой, жду $delay сек и повторяю..."
-      echo "Ответ пустов = ${raw_response}"
+      echo "⚠️ Ошибка: HTTP $http_code, ответ: $raw_response"
+      echo "⏳ Жду $delay сек перед повтором..."
       sleep $delay
     fi
   done
@@ -79,7 +83,11 @@ if [ "$KEY_OR_MODE" = "all" ]; then
     
     # Извлекаем текст сценария из ответа JSON
     raw_response=$(get_test_script "$TEST_KEY")
-    response=$(echo "$raw_response" | "$JQ_BIN" -r '.text')
+    response=$(echo "$raw_response" | "$JQ_BIN" -r '.text // empty')
+    if [[ -z "$response" ]]; then
+        echo "Ошибка: Не удалось извлечь поле .text для кейса $TEST_KEY"
+        continue
+    fi
     
     echo "raw_response = $raw_response"
     echo "Ответ от зефир = $response"
