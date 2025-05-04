@@ -20,30 +20,31 @@ get_test_script() {
   local delay=2
   local raw_response=""
   local http_code=""
-  echo "DEBUG: Запуск get_test_script для test_key=$test_key"
+
+  echo "DEBUG: Запуск get_test_script для test_key=$test_key" >&2
 
   for attempt in $(seq 1 $retries); do
-    echo "🔄 Попытка $attempt получить $test_key..."
+    echo "🔄 Попытка $attempt получить $test_key..." >&2
 
-    # Получаем ответ + HTTP статус
+    # Получаем ответ + HTTP статус (в одну строку)
     raw_response=$(curl -s -w "%{http_code}" -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${test_key}/testscript" \
       -H "Authorization: Bearer $ZEPHYR_TOKEN" \
       -H "Accept: application/json")
 
-    echo "ResponseTestScript = ${raw_response}"
     http_code=${raw_response: -3}
     raw_response=${raw_response:: -3}
 
     if [[ $http_code -eq 200 && -n "$raw_response" ]]; then
-      echo "✅ Ответ успешно получен (HTTP $http_code)"
+      echo "✅ Ответ успешно получен (HTTP $http_code)" >&2
       break
     else
-      echo "⚠️ Ошибка: HTTP $http_code, ответ: $raw_response"
-      echo "⏳ Жду $delay сек перед повтором..."
+      echo "⚠️ Ошибка: HTTP $http_code, ответ: $raw_response" >&2
+      echo "⏳ Жду $delay сек перед повтором..." >&2
       sleep $delay
     fi
   done
 
+  # Возвращаем только JSON-часть
   echo "$raw_response"
 }
 
