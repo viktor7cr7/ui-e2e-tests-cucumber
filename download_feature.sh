@@ -45,6 +45,8 @@ if [ "$KEY_OR_MODE" = "all" ]; then
   # Извлекаем ключи всех тестов
   keys=$(echo "$response" | "$JQ_BIN" -r '.values[].key')
 
+  echo "keys = $keys"
+
   for TEST_KEY in $keys; do
     echo "▶ Загрузка кейса: $TEST_KEY"
     # Извлекаем текст сценария из ответа JSON
