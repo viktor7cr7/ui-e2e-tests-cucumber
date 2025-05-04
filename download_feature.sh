@@ -26,8 +26,9 @@ local trace_file="curl_trace_${test_key}.log"
     
   for attempt in $(seq 1 $retries); do
     echo "🔄 Попытка $attempt получить $test_key..." >&2
-    echo "DEBUG test_key='$test_key'" | cat -v
-     sleep delay
+    echo "▶ DEBUG (od -c) test_key:"
+    echo "$test_key" | od -c
+
     # Получаем ответ + HTTP статус (в одну строку)
     raw_response=$(curl -s --trace-ascii "$trace_file" -w "%{http_code}" -X GET \
       "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${test_key}/testscript" \
