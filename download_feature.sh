@@ -28,9 +28,12 @@ get_test_script() {
       -H "Accept: application/json")
     
     if [[ -n "$raw_response" ]]; then
+      echo "Ответ успешно получен"
+      echo "Delay response = ${raw_response}"
       break
     else
       echo "⏳ Ответ пустой, жду $delay сек и повторяю..."
+      echo "Ответ пустов = ${raw_response}"
       sleep $delay
     fi
   done
