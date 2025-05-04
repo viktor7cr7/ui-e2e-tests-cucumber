@@ -95,14 +95,14 @@ if [ "$KEY_OR_MODE" = "all" ]; then
     # Извлекаем текст сценария из ответа JSON
     raw_response=$(get_test_script "$TEST_KEY")
 
+    echo "preResponse = ${raw_response}"
+
     response=$(echo "$raw_response" | "$JQ_BIN" -r '.text')
     if [[ -z "$response" ]]; then
         echo "❌ Ошибка: .text отсутствует или пустой для $TEST_KEY"
         echo "$raw_response"
     continue
     fi
-
-    response=$(echo "$raw_response" | "$JQ_BIN" -r '.text')
     
     echo "Ответ от зефир = $response"
 
