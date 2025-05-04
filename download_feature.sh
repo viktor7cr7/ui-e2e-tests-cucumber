@@ -37,7 +37,7 @@ local trace_file="curl_trace_${test_key}.log"
       -H "Authorization: Bearer $ZEPHYR_TOKEN" \
       -H "Accept: application/json")
 
-    echo "📄 Запрос и ответ сохранены в $trace_file"
+    echo "📄 Запрос и ответ сохранены в $trace_file" >&2
 
     http_code=${raw_response: -3}
     raw_response=${raw_response:: -3}
@@ -53,7 +53,7 @@ local trace_file="curl_trace_${test_key}.log"
   done
 
   # Возвращаем только JSON-часть
-  echo " Фильнай респонс = $raw_response . Конец."
+  echo "$raw_response"
 }
 
 add_zephyr_tag() {
