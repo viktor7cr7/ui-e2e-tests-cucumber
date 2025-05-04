@@ -9,3 +9,5 @@ else
   echo "🟢 Запуск тестов с тегом: $TAG"
   yarn cucumber:localhost --profile $TAG
 fi
+
+yarn postcucumber

@@ -56,8 +56,7 @@ const worldParameters: GlobalConfig = {
 const common = `./src/features/**/*.feature \
                 --require ./dist/step-definitions/**/**/*.js \
                 -f json:./reports/report.json \
-                --world-parameters ${JSON.stringify(worldParameters)} \
-                --format progress-bar`;
+                --world-parameters ${JSON.stringify(worldParameters)}`;
 
 const dev = `${common} --tags '@dev'`;
 const smoke = `${common} --tags '@smoke'`;
