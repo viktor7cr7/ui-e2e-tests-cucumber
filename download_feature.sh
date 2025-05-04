@@ -22,11 +22,11 @@ get_test_script() {
   local http_code=""
 local trace_file="curl_trace_${test_key}.log"
 
-
   echo "DEBUG: Запуск get_test_script для test_key=$test_key" >&2
 
   for attempt in $(seq 1 $retries); do
     echo "🔄 Попытка $attempt получить $test_key..." >&2
+    echo "DEBUG test_key='$test_key'" | cat -v
 
     # Получаем ответ + HTTP статус (в одну строку)
     raw_response=$(curl -s --trace-ascii "$trace_file" -w "%{http_code}" -X GET \
