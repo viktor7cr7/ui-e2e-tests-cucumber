@@ -23,8 +23,8 @@ get_test_script() {
 local trace_file="curl_trace_${test_key}.log"
 
   echo "DEBUG: Запуск get_test_script для test_key=$test_key" >&2
-    echo "▶ DEBUG (od -c) test_key:"
-    echo "$test_key" | od -c
+  echo "▶ DEBUG (od -c) test_key:" >&2
+  echo "$test_key" | od -c >&2
   for attempt in $(seq 1 $retries); do
     echo "🔄 Попытка $attempt получить $test_key..." >&2
 
