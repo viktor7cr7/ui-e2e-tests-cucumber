@@ -51,6 +51,8 @@ if [ "$KEY_OR_MODE" = "all" ]; then
     response=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
       -H "Authorization: Bearer $ZEPHYR_TOKEN" \
       -H "Accept: application/json" | "$JQ_BIN" -r '.text')
+    
+    echo "Ответ от зефир = $response"
 
     # Путь к файлу с тестом
     feature_file=$(echo "$FEATURES_DIR/${TEST_KEY}.feature" | tr -d '\r')
