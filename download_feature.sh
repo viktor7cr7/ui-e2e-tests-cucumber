@@ -53,7 +53,7 @@ local trace_file="curl_trace_${test_key}.log"
   done
 
   # Возвращаем только JSON-часть
-  echo "$raw_response"
+  echo " Фильнай респонс = $raw_response . Конец."
 }
 
 add_zephyr_tag() {
@@ -95,7 +95,7 @@ if [ "$KEY_OR_MODE" = "all" ]; then
     # Извлекаем текст сценария из ответа JSON
     raw_response=$(get_test_script "$TEST_KEY")
 
-    echo "preResponse = ${raw_response}"
+    echo "preResponse = ${raw_response} Конец."
 
     response=$(echo "$raw_response" | "$JQ_BIN" -r '.text')
     if [[ -z "$response" ]]; then
