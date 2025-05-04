@@ -14,6 +14,30 @@ mkdir -p "$FEATURES_DIR"
 echo "Содержимое папки после очистки:"
 ls -l "$FEATURES_DIR"
 
+get_test_script() {
+  local test_key=$1
+  local retries=5
+  local delay=2
+  local raw_response=""
+  
+  for attempt in $(seq 1 $retries); do
+    echo "Попытка $attempt получить $test_key..."
+    
+    raw_response=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${test_key}/testscript" \
+      -H "Authorization: Bearer $ZEPHYR_TOKEN" \
+      -H "Accept: application/json")
+    
+    if [[ -n "$raw_response" ]]; then
+      break
+    else
+      echo "⏳ Ответ пустой, жду $delay сек и повторяю..."
+      sleep $delay
+    fi
+  done
+
+  echo "$raw_response"
+}
+
 add_zephyr_tag() {
   set -x
   local input_file=$1
@@ -49,13 +73,9 @@ if [ "$KEY_OR_MODE" = "all" ]; then
 
   for TEST_KEY in $keys; do
     echo "▶ Загрузка кейса: $TEST_KEY"
-    # Извлекаем текст сценария из ответа JSON
-    raw_response=$(curl -s -X GET "https://eu.api.zephyrscale.smartbear.com/v2/testcases/${TEST_KEY}/testscript" \
-    -H "Authorization: Bearer $ZEPHYR_TOKEN" \
-    -H "Accept: application/json")
-
-    echo "RAW ответ от Zephyr = $raw_response"
     
+    # Извлекаем текст сценария из ответа JSON
+    raw_response=$(get_test_script "$TEST_KEY")
     response=$(echo "$raw_response" | "$JQ_BIN" -r '.text')
     
     echo "Ответ от зефир = $response"
