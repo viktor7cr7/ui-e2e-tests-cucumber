@@ -20,6 +20,7 @@ get_test_script() {
   local delay=2
   local raw_response=""
   local http_code=""
+  echo "DEBUG: Запуск get_test_script для test_key=$test_key"
 
   for attempt in $(seq 1 $retries); do
     echo "🔄 Попытка $attempt получить $test_key..."
@@ -29,6 +30,7 @@ get_test_script() {
       -H "Authorization: Bearer $ZEPHYR_TOKEN" \
       -H "Accept: application/json")
 
+    echo "ResponseTestScript = ${raw_response}"
     http_code=${raw_response: -3}
     raw_response=${raw_response:: -3}
 
