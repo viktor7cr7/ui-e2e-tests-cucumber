@@ -53,7 +53,7 @@ if [ "$KEY_OR_MODE" = "all" ]; then
       -H "Accept: application/json" | "$JQ_BIN" -r '.text')
 
     # Путь к файлу с тестом
-    feature_file="$FEATURES_DIR/${TEST_KEY}.feature"
+    feature_file=$(echo "$FEATURES_DIR/${TEST_KEY}.feature" | tr -d '\r')
     tmp_file="tmp.feature"
 
     # Создаем заголовки Feature и Scenario
